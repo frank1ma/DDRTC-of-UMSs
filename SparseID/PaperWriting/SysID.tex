@@ -1,0 +1,57 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage{tabularx} % extra features for tabular environment
+\usepackage{amsmath}  % improve math presentation
+\usepackage{graphicx} % takes care of graphic including machinery
+\usepackage[margin=1in,letterpaper]{geometry} % decreases margins
+\usepackage{cite} % takes care of citations
+\usepackage[final]{hyperref} % adds hyper links inside the generated pdf file
+\hypersetup{
+	colorlinks=true,       % false: boxed links; true: colored links
+	linkcolor=blue,        % color of internal links
+	citecolor=blue,        % color of links to bibliography
+	filecolor=magenta,     % color of file links
+	urlcolor=blue         
+}
+\usepackage{blindtext}
+\usepackage{float}
+%++++++++++++++++++++++++++++++++++++++++
+
+
+\begin{document}
+
+
+
+\section{Data\_driven technique to discover optimal model of $\ddot{F}$}
+
+To estimate $\ddot{f}$, a data\_driven technique is employed. We consider $\ddot{F}$ is linear in terms of $\theta$, $ \alpha$, $\dot{\theta}$, and $\dot{\alpha}$ as equation \ref{EqddF} presents. 
+\begin{equation}\label{EqddF}
+\ddot{F}=c_{1} \theta+c_{2} \alpha+c_{3} \dot{\alpha} + c_{4} \dot{\theta} 
+\end{equation}
+where $c_{1}$, $c_{2}$, $c_{3}$, and $c_{4}$ are constant coefficients. From experiment, only the time incremental record of angles $\theta$ and $\alpha$ are available, and $F$ is known by $\theta+1.039\alpha$. To estimate the derivatives and filter the measurement noises of $\theta$ and $\alpha$, the algebraic operation in \cite{FliessRamirez2003} is applied.  We assume the dynamic of system \ref{EqddF} is sparse in the states and employ the least absolute shrinkage and selection operator (LASSO) to estimate the sparse terms through minimizing the cost function $J_{\lambda}$ in \ref{EqCostFuncLASSO}. 
+
+\begin{equation}\label{EqCostFuncLASSO}
+J_{\lambda}(\mathbf{c}) =\left\Vert \mathbf{e}\right\Vert _{2}^{2}+\lambda\left\Vert \mathbf{c}\right\Vert _{1}
+\end{equation}
+
+Let us introduce $c$ as the vector of coefficients and $e$ accounts for the estimation error. $\lambda > 0$ is a preselected positive number known as the sparse regulator. It is common to use cross-validation techniques from machine learning to determine the sparse regulation parameter $\lambda$. The value of $\lambda$ in an finite interval is sampled and total data is divided into train and test dataset. The cross-validation mean square error over the test dataset is computed. The $\lambda$ value which minimizes the cross-validation error is selected. The corresponding model is chosen as an optimal model with a proper balance of complexity and accuracy.
+
+In order to develop robust sparse regression, we propose to combine the sparse regression with bootstrapping. We consider $K$
+bootstrap sample vectors containing $L$ elements of the original data points. For
+each bootstrap sample vector, the sparse regression is applied to identify the
+model. Finally, the parameters of the model is the average of the $K$
+estimated coefficient vectors $\hat{\mathbf{c}}_{l}$.%
+\begin{equation}
+\tilde{\mathbf{c}}=\frac{1}{K}{\sum_{l=1}^{K}}\hat{\mathbf{c}}_{l}
+\label{EqBootsrapping}%
+\end{equation}
+
+The standard deviation of estimated coefficient vectors $\hat{\mathbf{c}}_{l}$ is computed to study the variation of parameter estimation. We record data for 4 $s$ with the time increment 0.002 $s$. The first half of the data is kept for training and we use the rest for test data. For bootstrapping, 30 samples with the length of 30$\%$ are selected. The algorithm estimates 
+\begin{equation}
+\ddot{F}=(-44.2532 \pm 0.0361) \alpha
+\label{EqEstimated}%
+\end{equation}
+
+
+
+ 
+\end{document}
